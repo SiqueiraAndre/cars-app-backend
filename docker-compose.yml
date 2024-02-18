@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  db-postgres:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"      
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - docker-compose-network      
+
+  db-pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "82:80"
+    depends_on:
+      - db-postgres
+    networks:
+      - docker-compose-network
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./cars-app:/app
+    ports:
+      - "80:8000"
+    depends_on:
+      - db-postgres
+    networks:
+      - docker-compose-network      
+networks:
+    docker-compose-network:
+        driver: bridge
