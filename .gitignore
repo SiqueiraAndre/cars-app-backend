@@ -262,3 +262,6 @@ pyrightconfig.json
 
 ## data docker
 data/
+
+## Files statics
+static/
