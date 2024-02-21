@@ -9,9 +9,7 @@ services:
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    networks:
-      - docker-compose-network      
+      - POSTGRES_PASSWORD=postgres 
 
   db-pgadmin:
     image: dpage/pgadmin4
@@ -22,20 +20,32 @@ services:
       - "82:80"
     depends_on:
       - db-postgres
-    networks:
-      - docker-compose-network
 
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+  web: 
+    restart: "always"    
     volumes:
       - ./cars-app:/app
+      - ./static:/static
+    env_file:
+      - ./cars-app/.env
+    build:
+      context: .      
     ports:
-      - "80:8000"
+      - "8000:8000"
     depends_on:
       - db-postgres
-    networks:
-      - docker-compose-network      
-networks:
-    docker-compose-network:
-        driver: bridge
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    depends_on:
+      - web      
+    volumes:
+      - ./static:/www/static
+    links:
+      - web:web   
+
+volumes:
+  web-static:
