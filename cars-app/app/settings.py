@@ -19,7 +19,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -29,8 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] # update
 
 # Application definition
 
@@ -60,7 +58,9 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['app/templates'],        
+        'DIRS': [
+            Path(BASE_DIR, 'templates') # update
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,15 +85,7 @@ DATABASES = {
         "NAME": os.environ.get("DB_NAME"),
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASS"),
-    }    
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'cars',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'postgres',
-    #     'HOST': 'db-postgres',
-    #     'PORT': 5432,
-    # }        
+    }       
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
@@ -135,12 +127,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_ROOT = Path(BASE_DIR, '/static/') #new
+STATIC_URL = 'static/' #new
+# STATICFILES_DIRS = [Path(BASE_DIR,'static/'),] #new
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA = '/media'
+MEDIA_ROOT = Path(BASE_DIR, 'media') #new
+MEDIA_URL = "/media/" #new
